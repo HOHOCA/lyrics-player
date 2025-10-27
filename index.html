@@ -149,7 +149,11 @@
         </div>
         
         <div class="player-section">
-            <audio id="audioPlayer" controls>
+            <div id="loadingTip" style="text-align: center; padding: 15px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; margin-bottom: 15px; color: #856404; font-size: 15px; display: none;">
+                正在加载音频文件，请稍候...
+            </div>
+            
+            <audio id="audioPlayer" controls preload="auto">
                 <source src="20251026_214808.m4a" type="audio/mp4">
                 您的浏览器不支持音频播放。
             </audio>
@@ -250,6 +254,31 @@
                 }
             });
         }
+        
+        // 显示加载提示
+        const loadingTip = document.getElementById('loadingTip');
+        
+        // 监听音频加载事件
+        audio.addEventListener('loadstart', () => {
+            loadingTip.style.display = 'block';
+        });
+        
+        audio.addEventListener('loadeddata', () => {
+            loadingTip.style.display = 'none';
+        });
+        
+        audio.addEventListener('canplay', () => {
+            loadingTip.style.display = 'none';
+        });
+        
+        // 监听音频加载错误
+        audio.addEventListener('error', () => {
+            loadingTip.style.display = 'block';
+            loadingTip.textContent = '音频加载失败，请检查网络连接';
+            loadingTip.style.background = '#f8d7da';
+            loadingTip.style.borderColor = '#dc3545';
+            loadingTip.style.color = '#721c24';
+        });
         
         // 监听音频播放时间更新
         audio.addEventListener('timeupdate', updateLyrics);
